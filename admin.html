@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>わかやまガイド 管理者</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--indigo:#1b3a5c;--sky:#4a90c4;--bg:#f8f9fb;--card:#fff;--text:#1a1a2e;--t2:#5a5a6e;--t3:#a0a0b0;--ib:rgba(27,58,92,0.08);--ip:rgba(27,58,92,0.06);--r:14px;--sans:'Noto Sans JP',sans-serif;--mono:'DM Mono',monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+.ctn{max-width:720px;margin:0 auto;padding:20px}
+header{text-align:center;margin-bottom:24px}
+header h1{font-size:18px;font-weight:600;color:var(--indigo)}
+header p{font-size:11px;color:var(--t3);margin-top:3px;letter-spacing:1px}
+.hd-line{width:40px;height:2px;background:linear-gradient(90deg,var(--indigo),var(--sky));margin:10px auto 0;border-radius:1px}
+
+/* Auth */
+.auth-wrap{display:flex;align-items:center;justify-content:center;min-height:60vh}
+.auth-box{background:var(--card);border-radius:20px;padding:32px;max-width:340px;width:100%;text-align:center;border:1px solid var(--ib)}
+.auth-box h2{font-size:16px;font-weight:600;color:var(--indigo);margin-bottom:12px}
+.auth-box input{width:100%;padding:10px 12px;border:1px solid var(--ib);border-radius:10px;font-size:14px;font-family:var(--sans);background:var(--bg);outline:none;text-align:center;margin-bottom:12px}
+.auth-box input:focus{border-color:var(--sky)}
+.auth-box button{width:100%;padding:11px;border:none;border-radius:10px;background:var(--indigo);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans)}
+.auth-err{color:#c33;font-size:12px;margin-top:8px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;max-width:360px;margin:0 auto 20px}
+.tab{flex:1;padding:9px;border:none;border-radius:10px;font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.2s}
+.tab.on{background:var(--indigo);color:#fff}
+.tab:not(.on){background:transparent;color:var(--t3)}
+
+/* Form */
+.form-s{background:var(--card);border:1px solid var(--ib);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.form-s h2{font-size:14px;font-weight:600;color:var(--indigo);margin-bottom:14px}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:11px;font-weight:500;color:var(--t2);margin-bottom:4px}
+.fld select,.fld input,.fld textarea{width:100%;padding:9px 11px;border:1px solid var(--ib);border-radius:10px;font-family:var(--sans);font-size:13px;background:var(--bg);color:var(--text);outline:none}
+.fld select:focus,.fld input:focus,.fld textarea:focus{border-color:var(--sky)}
+.fld textarea{min-height:80px;resize:vertical;line-height:1.7}
+.btn{padding:9px 20px;border:none;border-radius:10px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer}
+.btn-p{background:var(--indigo);color:#fff}
+.btn-d{background:#dc3545;color:#fff;font-size:11px;padding:5px 10px}
+.btn-o{background:transparent;border:1px solid var(--ib);color:var(--t2);font-size:11px;padding:5px 10px}
+
+/* Cards */
+.info-card{background:var(--card);border:1px solid var(--ib);border-radius:var(--r);padding:14px;margin-bottom:8px}
+.info-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.info-card .ttl{font-size:14px;font-weight:600;color:var(--text)}
+.info-card .cat{font-size:10px;font-weight:500;color:var(--sky);background:rgba(74,144,196,0.08);padding:2px 8px;border-radius:6px}
+.info-card .bd{font-size:12px;color:var(--t2);line-height:1.7;margin-top:6px;white-space:pre-wrap}
+.info-card .mt{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:10px;color:var(--t3)}
+.info-card .acts{display:flex;gap:4px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--ib);border-radius:var(--r);padding:14px;text-align:center}
+.stat .num{font-size:22px;font-weight:700;color:var(--indigo)}
+.stat .lbl{font-size:10px;color:var(--t3);margin-top:3px}
+
+.loading{text-align:center;padding:30px;color:var(--t3);font-size:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--indigo);color:#fff;padding:8px 20px;border-radius:10px;font-size:12px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:100}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="ctn">
+  <header>
+    <h1>わかやまガイド 管理者</h1>
+    <p>情報DB管理</p>
+    <div class="hd-line"></div>
+  </header>
+
+  <!-- Auth -->
+  <div id="authArea" class="auth-wrap">
+    <div class="auth-box">
+      <h2>パスワードを入力</h2>
+      <input type="password" id="passIn" placeholder="管理者パスワード" onkeydown="if(event.key==='Enter')doAuth()">
+      <button onclick="doAuth()">ログイン</button>
+      <div class="auth-err" id="authErr"></div>
+    </div>
+  </div>
+
+  <!-- Main (hidden until auth) -->
+  <div id="mainArea" style="display:none">
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('list')">一覧</button>
+      <button class="tab" onclick="showTab('add')">追加</button>
+      <button class="tab" onclick="showTab('stats')">統計</button>
+    </div>
+    <div id="listTab"><div id="infoList" class="loading">読み込み中...</div></div>
+    <div id="addTab" style="display:none">
+      <div class="form-s">
+        <h2>新しい情報を追加</h2>
+        <div class="fld"><label>カテゴリ</label><select id="fCat"><option value="観光スポット">観光スポット</option><option value="イベント・臨時">イベント・臨時</option><option value="バス路線">バス路線</option><option value="おすすめ店舗">おすすめ店舗</option></select></div>
+        <div class="fld"><label>タイトル</label><input id="fTitle" placeholder="和歌山城 夏季営業時間変更"></div>
+        <div class="fld"><label>内容（AIが参照する情報）</label><textarea id="fContent" placeholder="2026年7月1日〜8月31日の間、営業時間が9:00〜18:00に延長…"></textarea></div>
+        <button class="btn btn-p" onclick="addEntry()">登録する</button>
+      </div>
+    </div>
+    <div id="statsTab" style="display:none"><div class="stats" id="statsArea"></div></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const GAS_URL="https://script.google.com/macros/s/AKfycbyn0HgEFUOwkZhv5BZA-NhK9ylPIyTw4YD60JHYAf1T6nxLEd918SF2DBA4Iy9hsDuw/exec";
+let pass="",entries=[];
+
+// Auth
+async function doAuth(){
+  pass=document.getElementById("passIn").value;
+  try{
+    const r=await fetch(GAS_URL+"?action=authCheck&pass="+encodeURIComponent(pass));
+    const j=await r.json();
+    if(j.status==="ok"){document.getElementById("authArea").style.display="none";document.getElementById("mainArea").style.display="";loadEntries()}
+    else{document.getElementById("authErr").textContent="パスワードが違います"}
+  }catch(e){document.getElementById("authErr").textContent="接続エラー"}
+}
+
+function showTab(t){
+  document.querySelectorAll(".tab").forEach((b,i)=>b.classList.toggle("on",["list","add","stats"][i]===t));
+  document.getElementById("listTab").style.display=t==="list"?"":"none";
+  document.getElementById("addTab").style.display=t==="add"?"":"none";
+  document.getElementById("statsTab").style.display=t==="stats"?"":"none";
+  if(t==="stats")renderStats();
+}
+
+async function loadEntries(){
+  try{const r=await fetch(GAS_URL+"?action=getInfo");const j=await r.json();entries=j.data||[];renderList()}
+  catch(e){document.getElementById("infoList").innerHTML='<div class="loading">読み込みエラー</div>'}
+}
+
+function renderList(){
+  const el=document.getElementById("infoList");
+  if(!entries.length){el.innerHTML='<div class="loading">登録情報がありません</div>';return}
+  el.innerHTML=entries.map(e=>`<div class="info-card"><div class="top"><div class="ttl">${esc(e.title)}</div><span class="cat">${esc(e.category)}</span></div><div class="bd">${esc(e.content)}</div><div class="mt"><span>更新:${e.updated} / ${e.active==="○"?"有効":"無効"}</span><div class="acts"><button class="btn-o" onclick="tog('${e.id}','${e.active==="○"?"×":"○"}')">${e.active==="○"?"無効化":"有効化"}</button><button class="btn-d" onclick="del('${e.id}')">削除</button></div></div></div>`).join("");
+}
+
+async function addEntry(){
+  const cat=document.getElementById("fCat").value,title=document.getElementById("fTitle").value.trim(),content=document.getElementById("fContent").value.trim();
+  if(!title||!content){toast("タイトルと内容を入力");return}
+  toast("登録中...");
+  const p=new URLSearchParams({action:"addInfo",pass,category:cat,title,content});
+  await fetch(GAS_URL+"?"+p);
+  document.getElementById("fTitle").value="";document.getElementById("fContent").value="";
+  toast("登録しました");await loadEntries();showTab("list");
+}
+
+async function tog(id,v){toast("更新中...");await fetch(GAS_URL+"?"+new URLSearchParams({action:"updateInfo",pass,id,active:v}));toast(v==="○"?"有効化":"無効化");loadEntries()}
+async function del(id){if(!confirm("削除しますか？"))return;toast("削除中...");await fetch(GAS_URL+"?"+new URLSearchParams({action:"deleteInfo",pass,id}));toast("削除完了");loadEntries()}
+
+function renderStats(){
+  const total=entries.length,active=entries.filter(e=>e.active==="○").length,cats={};
+  entries.forEach(e=>{cats[e.category]=(cats[e.category]||0)+1});
+  let h=`<div class="stat"><div class="num">${total}</div><div class="lbl">総登録数</div></div><div class="stat"><div class="num">${active}</div><div class="lbl">有効</div></div>`;
+  Object.keys(cats).forEach(c=>{h+=`<div class="stat"><div class="num">${cats[c]}</div><div class="lbl">${c}</div></div>`});
+  document.getElementById("statsArea").innerHTML=h;
+}
+
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>")}
+function toast(m){const e=document.getElementById("toast");e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2500)}
+</script>
+</body>
+</html>
