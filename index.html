@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>わかやまガイド</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--indigo:#1b3a5c;--il:#2a5a8c;--ip:rgba(27,58,92,0.06);--im:rgba(27,58,92,0.12);--ib:rgba(27,58,92,0.08);--sky:#4a90c4;--sp:rgba(74,144,196,0.08);--bg:#f8f9fb;--card:#fff;--text:#1a1a2e;--t2:#5a5a6e;--t3:#a0a0b0;--green:#2d9a5c;--amber:#d4871a;--sans:'Noto Sans JP',sans-serif;--mono:'DM Mono',monospace;--r:16px;--rs:12px}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:0;background:transparent}
+input::placeholder{color:var(--t3)}
+
+.hd{padding:20px 20px 8px;text-align:center;flex-shrink:0;position:relative;z-index:10}
+.torii{display:block;width:36px;height:36px;object-fit:contain;margin:0 auto 6px;opacity:0.7}
+.hd h1{font-size:18px;font-weight:600;letter-spacing:0.5px;color:var(--indigo)}
+.hd .sub{font-size:10px;color:var(--t3);font-weight:500;letter-spacing:2px;margin-top:3px}
+.hd-line{width:40px;height:2px;background:linear-gradient(90deg,var(--indigo),var(--sky));margin:10px auto;border-radius:1px}
+.hd-btns{position:absolute;right:16px;top:16px;display:flex;gap:6px}
+.hd-btn{background:none;border:1px solid var(--ib);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--t3);cursor:pointer;font-family:var(--sans)}
+
+.nav{display:flex;gap:3px;padding:0 16px 10px;flex-shrink:0;max-width:420px;margin:0 auto;width:100%}
+.nav-btn{flex:1;padding:8px 0;border:none;border-radius:var(--rs);font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.25s;text-align:center}
+.nav-btn.on{background:var(--indigo);color:#fff}
+.nav-btn:not(.on){background:transparent;color:var(--t3)}
+
+.content{flex:1;display:flex;flex-direction:column;min-height:0}
+.vw{flex:1;display:none;flex-direction:column;min-height:0}
+.vw.on{display:flex}
+
+/* FAQ */
+.faq-scroll{flex:1;overflow-y:auto;padding:0 24px 24px}
+.faq-bread{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 0 16px;font-size:12px;color:var(--t3)}
+.faq-bread button{background:none;border:none;color:var(--sky);font-size:12px;font-family:var(--sans);cursor:pointer;font-weight:500}
+.faq-home{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:360px;margin:0 auto}
+.cat-card{background:var(--card);border:1px solid var(--ib);border-radius:var(--r);padding:22px 14px 18px;cursor:pointer;transition:all 0.25s;text-align:center}
+.cat-card:active{transform:scale(0.97);background:var(--ip)}
+.cat-card .cn{font-size:14px;font-weight:600;color:var(--indigo)}
+.cat-card .cc{font-size:11px;color:var(--t3);margin-top:5px}
+.faq-items{display:flex;flex-direction:column;max-width:380px;margin:0 auto}
+.faq-q{width:100%;padding:14px 0;border:none;background:transparent;font-family:var(--sans);font-size:14px;color:var(--text);text-align:center;cursor:pointer;border-bottom:1px solid var(--ib);transition:color 0.2s}
+.faq-q:active{color:var(--sky)}
+.faq-q:last-child{border-bottom:none}
+.faq-ans{animation:fadeSlide 0.3s ease;max-width:420px;margin:0 auto}
+.faq-ans h3{font-size:17px;font-weight:600;color:var(--indigo);text-align:center;margin-bottom:16px;line-height:1.5}
+.faq-ans .body{font-size:13.5px;line-height:2;color:var(--t2);text-align:left}
+.faq-ans .body a{color:var(--sky);text-decoration:none;border-bottom:1px solid var(--sp);word-break:break-all}
+.faq-cta{margin-top:24px;padding:16px;border-radius:var(--r);background:var(--ip);border:1px solid var(--ib);cursor:pointer;text-align:center}
+.faq-cta p{font-size:13px;color:var(--t2)}
+.faq-cta b{color:var(--indigo)}
+
+/* Chat */
+.usage-bar{display:flex;align-items:center;gap:8px;padding:4px 24px 6px;max-width:400px;margin:0 auto;width:100%}
+.usage-bar .lb{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.tracks{flex:1;display:flex;gap:5px}
+.track{flex:1;height:3px;border-radius:2px;background:var(--ip)}
+.fill{height:100%;border-radius:2px;transition:width 0.4s}
+.chat-scroll{flex:1;overflow-y:auto;padding:8px 24px}
+.msg{display:flex;flex-direction:column;margin-bottom:12px}
+.msg.user{align-items:flex-end}
+.msg.assistant{align-items:flex-start}
+.bubble{max-width:84%;padding:11px 15px;font-size:13.5px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.bubble a{color:var(--sky);text-decoration:underline;word-break:break-all}
+.msg.assistant .bubble{border-radius:16px 16px 16px 4px;background:var(--card);border:1px solid var(--ib)}
+.msg.user .bubble{border-radius:16px 16px 4px 16px;background:var(--indigo);color:rgba(255,255,255,0.95)}
+.mbadge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-family:var(--mono);border-radius:6px;padding:2px 7px;margin-top:3px}
+.mbadge .dot{width:4px;height:4px;border-radius:50%}
+.typing{display:flex;margin-bottom:12px}
+.typing-in{padding:11px 16px;border-radius:16px 16px 16px 4px;background:var(--card);border:1px solid var(--ib);display:flex;align-items:center;gap:8px}
+.dots{display:flex;gap:3px}
+.d{width:5px;height:5px;border-radius:50%;opacity:0.4;animation:bounce 1.2s infinite}
+.d:nth-child(2){animation-delay:0.15s}
+.d:nth-child(3){animation-delay:0.3s}
+.err-msg{text-align:center;color:#b33;font-size:12px;padding:8px;background:rgba(180,50,50,0.06);border-radius:var(--rs);margin:8px 32px}
+.speak-stop{display:none;justify-content:center;padding:0 0 6px}
+.speak-stop button{background:var(--ip);border:none;border-radius:20px;padding:5px 14px;font-size:11px;color:var(--indigo);cursor:pointer;font-family:var(--sans)}
+.in-area{padding:6px 20px 16px}
+.in-row{display:flex;align-items:flex-end;gap:6px;max-width:480px;margin:0 auto}
+.mic,.vbtn{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;border:1px solid var(--ib);background:var(--card);transition:all 0.2s}
+.mic.on{border-color:var(--sky);background:var(--sp);animation:pulse 1.5s infinite}
+.vbtn.on{background:var(--ip);border-color:var(--im)}
+.in-wrap{flex:1;display:flex;background:var(--card);border-radius:20px;border:1px solid var(--ib);overflow:hidden}
+.in-wrap input{flex:1;border:none;outline:none;padding:9px 14px;font-size:14px;font-family:var(--sans);background:transparent;color:var(--text)}
+.send{background:transparent;border:none;border-radius:0 20px 20px 0;padding:0 14px;color:var(--t3);font-size:16px;cursor:not-allowed;transition:all 0.2s;display:flex;align-items:center}
+.send.ready{background:var(--indigo);color:#fff;cursor:pointer}
+
+/* QR */
+.qr-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.qr-wrap h2{font-size:16px;font-weight:600;color:var(--indigo);margin-bottom:8px}
+.qr-wrap p{font-size:12px;color:var(--t2);margin-bottom:20px;line-height:1.6}
+#qrcode{display:inline-block}
+.qr-url{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:12px;word-break:break-all}
+
+/* Footer */
+.ft{padding:6px 0;text-align:center;flex-shrink:0}
+.ft p{font-size:9px;color:var(--t3);font-family:var(--mono)}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;z-index:100;background:rgba(27,58,92,0.25);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:var(--card);border-radius:20px;padding:28px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.1);position:relative}
+.modal-x{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.04);border:none;width:26px;height:26px;border-radius:50%;font-size:12px;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal h2{text-align:center;font-size:16px;font-weight:600;color:var(--indigo);margin-bottom:4px}
+.modal .desc{text-align:center;font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:16px}
+.modal input[type="password"]{width:100%;padding:10px 12px;border-radius:var(--rs);border:1px solid var(--ib);font-size:13px;font-family:var(--mono);background:var(--bg);outline:none}
+.modal input:focus{border-color:var(--sky)}
+.modal .lnk{display:block;text-align:center;margin:8px 0;font-size:11px;color:var(--sky);text-decoration:none;font-weight:500}
+.modal .sbtn{width:100%;padding:11px;border-radius:var(--rs);border:none;background:rgba(0,0,0,0.04);color:var(--t3);font-size:14px;font-weight:600;cursor:not-allowed;font-family:var(--sans);transition:all 0.2s}
+.modal .sbtn.ready{background:var(--indigo);color:#fff;cursor:pointer}
+.modal .info{margin-top:12px;padding:10px;border-radius:var(--rs);background:var(--ip);font-size:10px;color:var(--t2);line-height:1.6;text-align:center}
+
+@keyframes fadeSlide{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,144,196,0.15)}50%{box-shadow:0 0 0 8px rgba(74,144,196,0)}}
+.msg-anim{animation:fadeSlide 0.3s ease}
+</style>
+</head>
+<body>
+<header class="hd">
+  <img class="torii" src="data:image/png;base64,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" alt="">
+  <h1 id="hdTitle">わかやまガイド</h1>
+  <p class="sub" id="hdSub">JR和歌山駅</p>
+  <div class="hd-btns">
+    <button class="hd-btn" onclick="toggleLang()" id="langBtn">EN</button>
+    <button class="hd-btn" id="keyBtn" style="display:none" onclick="resetKey()">キー変更</button>
+  </div>
+</header>
+<div class="hd-line"></div>
+
+<div class="nav" id="mainNav"></div>
+
+<div class="content">
+  <div class="vw on" id="faqView"><div class="faq-scroll" id="faqScroll"></div></div>
+  <div class="vw" id="chatView">
+    <div class="usage-bar"><span class="lb">残り</span><div class="tracks"><div class="track"><div class="fill" id="uL" style="width:100%;background:var(--green)"></div></div><div class="track"><div class="fill" id="uF" style="width:100%;background:var(--amber)"></div></div><div class="track"><div class="fill" id="uP" style="width:100%;background:var(--indigo)"></div></div></div><span class="lb" id="uC">1,350回</span></div>
+    <div class="chat-scroll" id="chatScroll"></div>
+    <div class="speak-stop" id="spkStop"><button onclick="stopSpk()">読み上げ停止</button></div>
+    <div class="in-area"><div class="in-row">
+      <button class="mic" id="micBtn" onclick="toggleMic()">🎤</button>
+      <div class="in-wrap"><input type="text" id="chatIn" placeholder=""><button class="send" id="sendBtn" onclick="sendMsg()">↑</button></div>
+      <button class="vbtn on" id="vBtn" onclick="toggleV()">🔊</button>
+    </div></div>
+  </div>
+  <div class="vw" id="qrView"><div class="qr-wrap"><h2 id="qrTitle"></h2><p id="qrDesc"></p><div id="qrcode"></div><div class="qr-url" id="qrUrl"></div></div></div>
+</div>
+
+<div class="ft"><p>Powered by Gemini · 和歌山市観光案内</p></div>
+
+<div class="modal-bg" id="keyModal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <h2>APIキーを設定</h2>
+    <p class="desc">Google AI Studioで無料取得できます</p>
+    <input type="password" id="keyIn" placeholder="AIzaSy..." oninput="updSave()">
+    <a class="lnk" href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio →</a>
+    <button class="sbtn" id="saveBtn" onclick="saveKey()">設定して開始</button>
+    <div class="info">無料枠 合計 1,350回/日</div>
+  </div>
+</div>
+
+<script>
+// ═══ CONFIG ═══
+const GAS_URL="https://script.google.com/macros/s/AKfycbyn0HgEFUOwkZhv5BZA-NhK9ylPIyTw4YD60JHYAf1T6nxLEd918SF2DBA4Iy9hsDuw/exec";
+const NAVITIME="https://transfer-cloud.navitime.biz/wakayamabus/courses?busstop=00220204";
+
+// ═══ i18n ═══
+let lang="ja";
+const T={
+  ja:{title:"わかやまガイド",sub:"JR和歌山駅",faq:"よくある質問",chat:"AIに相談",qr:"QRコード",
+    welcome:"こんにちは。JR和歌山駅のわかやまガイドAIです。\n\n観光スポットへの行き方、バスの乗り場、グルメ情報など、なんでもどうぞ。",
+    ph:"なんでも聞いてください…",ctaText:"ここにない質問は",ctaBold:"AIに相談",ctaSuf:"してみよう",
+    qrT:"QRコードでアクセス",qrD:"スマートフォンで読み取ると、このガイドをご自身の端末でもご利用いただけます。",
+    langBtn:"EN",exhaust:"本日の無料枠を使い切りました。",allDead:"すべてのモデルが制限中です。"},
+  en:{title:"Wakayama Guide",sub:"JR Wakayama Station",faq:"FAQ",chat:"Ask AI",qr:"QR Code",
+    welcome:"Hello! I'm the Wakayama Guide AI at JR Wakayama Station.\n\nFeel free to ask about sightseeing, bus routes, food, and more.",
+    ph:"Ask me anything…",ctaText:"Can't find your answer?",ctaBold:"Ask AI",ctaSuf:"for help",
+    qrT:"Access via QR Code",qrD:"Scan with your smartphone to use this guide on your own device.",
+    langBtn:"JP",exhaust:"Daily free quota exhausted.",allDead:"All models are currently limited."}
+};
+
+const FAQ_JA=[
+  {id:"bus",name:"バス路線",items:[
+    {q:"バス乗り場の案内",a:"JR和歌山駅 西口1〜4番、東口5〜6番のりば\n\n1番→紀三井寺・マリーナシティ・塩屋方面\n2番→和歌山城・和歌浦・雑賀崎方面\n3番→南海和歌山市駅方面\n4番→和歌山大学・ふじと台・湊線方面\n5番(東口)→紀伊風土記の丘方面\n6番(東口)→関西空港リムジンバス\n\n時刻検索\n"+NAVITIME},
+    {q:"和歌山城へ",a:"2番のりば（西口）\n\n20・121・122系統→和歌山城前経由\n24・25系統→和歌山城前下車\n27系統→急行ノンストップ\n\n約10分。「公園前」下車。\n\n時刻検索\n"+NAVITIME},
+    {q:"和歌浦・新和歌浦へ",a:"2番のりば（西口）\n\n20系統→海南駅前ゆき\n23系統→医大病院ゆき\n24系統→新和歌浦ゆき\n25系統→和歌浦西ゆき\n\n約25〜30分。\n\n時刻検索\n"+NAVITIME},
+    {q:"紀三井寺・マリーナシティへ",a:"1番のりば（西口）\n\n40系統→海南駅前ゆき\n42系統→マリーナシティゆき\n44系統→医大病院ゆき\n\n紀三井寺約20分、マリーナシティ約30分。\n\n時刻検索\n"+NAVITIME},
+    {q:"雑賀崎へ",a:"2番のりば（西口）\n\n30系統→市内雑賀崎循環線\n\n約40分。25系統で和歌浦西乗換も可。\n\n時刻検索\n"+NAVITIME},
+    {q:"和歌山大学へ",a:"4番のりば（西口）\n\n172系統→ふじと台ゆき\n272系統→和歌山大学前駅ゆき\n\n約40分。\n\n時刻検索\n"+NAVITIME},
+    {q:"紀伊風土記の丘へ",a:"5番のりば（東口）\n\n90系統→紀伊風土記の丘ゆき\n\n約25分。\n\n時刻検索\n"+NAVITIME},
+  ]},
+  {id:"spots",name:"観光スポット",items:[
+    {q:"和歌山城",a:"紀州徳川家の居城。天守閣から市内一望。春は桜600本。動物園(無料)併設。\n入場料:大人410円\nバス:2番のりば約10分(20・24・25・27系統→公園前下車)"},
+    {q:"雑賀崎",a:"「日本のアマルフィ」。漁師町の絶景と夕日の名所。\nバス:2番のりば30系統(循環)約40分"},
+    {q:"友ヶ島",a:"旧軍砲台跡が残る無人島。ラピュタの世界観。\n南海加太線「加太駅」→友ヶ島汽船約20分\n往復:大人2,200円 / 問合せ:073-459-1333"},
+    {q:"紀三井寺",a:"関西最速の桜の名所。境内から和歌浦一望。\nバス:1番のりば40・42・44系統約20分"},
+  ]},
+  {id:"gourmet",name:"グルメ",items:[
+    {q:"和歌山ラーメン",a:"井出商店(元祖・濃厚豚骨醤油)\n丸三(あっさり老舗)\nまるイ(駅近)\n\n「早寿司」をサイドに頼むのが和歌山流。"},
+    {q:"名物一覧",a:"和歌山ラーメン/しらす丼/梅干し/みかん/柿の葉寿司/めはり寿司/クエ鍋(冬)/てんかけラーメン\n\nお土産:かげろう(福菓堂)、紀州梅"},
+  ]},
+  {id:"season",name:"季節・イベント",items:[
+    {q:"桜の名所",a:"和歌山城:600本(3月下旬〜4月上旬) バス2番約10分\n紀三井寺:関西最速 バス1番約20分"},
+    {q:"夏のイベント",a:"紀州おどり「ぶんだら節」8月第1土曜\n港まつり花火大会 7月下旬 約3,000発\n友ヶ島:夏はキャンプ可"},
+    {q:"冬の見どころ",a:"マリーナシティ:イルミ(11-2月) バス1番42系統約30分\n紅葉渓庭園(11月下旬)\nクエ料理(冬旬)/初詣:日前宮・竈山神社"},
+  ]},
+  {id:"tips",name:"お役立ち",items:[
+    {q:"観光案内所",a:"JR和歌山駅構内(中央改札右)\n9:00〜17:30 / パンフレット無料"},
+    {q:"バス時刻検索",a:"和歌山バス時刻・乗継検索:\n"+NAVITIME+"\n\nアプリ「Bus-Vision」でリアルタイム確認可\n和歌山営業所:073-445-3131"},
+    {q:"半日コース",a:"城下町(3h):駅→バス→和歌山城→ぶらくり丁→紀三井寺\n海辺(4h):駅→バス→和歌浦→加太→海鮮ランチ→友ヶ島"},
+    {q:"Wi-Fi",a:"WAKAYAMA Free Wi-Fi\nJR和歌山駅・和歌山城・マリーナシティ等\nメール登録/1回30分/再接続可"},
+  ]},
+];
+
+const FAQ_EN=[
+  {id:"bus",name:"Bus Routes",items:[
+    {q:"Bus stop guide",a:"JR Wakayama Sta. West Exit: Stops 1-4, East Exit: 5-6\n\n1→Kimiidera, Marina City\n2→Wakayama Castle, Wakanoura\n3→Nankai Wakayamashi Sta.\n4→Wakayama Univ., Fujitodai\n5(East)→Kii Fudoki-no-Oka\n6(East)→KIX Airport Limousine\n\nTimetable:\n"+NAVITIME},
+    {q:"To Wakayama Castle",a:"Stop 2 (West Exit)\nRoute 20/24/25/27 → about 10 min\nGet off at 'Koen-mae'\n\nTimetable:\n"+NAVITIME},
+    {q:"To Wakanoura",a:"Stop 2 (West Exit)\nRoute 20/23/24/25 → about 25-30 min\n\nTimetable:\n"+NAVITIME},
+    {q:"To Kimiidera/Marina City",a:"Stop 1 (West Exit)\nRoute 40/42/44 → Kimiidera 20min, Marina City 30min\n\nTimetable:\n"+NAVITIME},
+  ]},
+  {id:"spots",name:"Sightseeing",items:[
+    {q:"Wakayama Castle",a:"Edo-period castle of Kishu Tokugawa clan. Cherry blossoms in spring (600 trees). Free zoo inside.\nAdmission: ¥410\nBus: Stop 2, ~10min"},
+    {q:"Tomogashima Island",a:"Uninhabited island with WWII-era fort ruins. Often compared to Ghibli's Laputa.\nNankai Kada Line → Kada Port → Ferry 20min\nRound trip: ¥2,200"},
+    {q:"Saikazaki (Japan's Amalfi)",a:"Picturesque fishing village on hillside. Stunning sunsets from the lighthouse.\nBus: Stop 2, Route 30 (loop) ~40min"},
+  ]},
+  {id:"gourmet",name:"Food",items:[
+    {q:"Wakayama Ramen",a:"Ide Shoten - Original, rich tonkotsu-shoyu\nMarusan - Light, classic\nMarui - Near station\n\nTip: Order 'hayazushi' as a side!"},
+    {q:"Local specialties",a:"Wakayama Ramen / Shirasu-don / Umeboshi / Mikan / Kaki-no-ha Sushi / Kue hot pot (winter)"},
+  ]},
+  {id:"tips",name:"Useful Info",items:[
+    {q:"Tourist info center",a:"Inside JR Wakayama Station (right of central gate)\n9:00-17:30 / Free maps & pamphlets"},
+    {q:"Wi-Fi",a:"WAKAYAMA Free Wi-Fi\nAvailable at JR Sta, Castle area, Marina City\nEmail registration / 30min sessions / reconnect OK"},
+  ]},
+];
+
+// ═══ SYSTEM PROMPT ═══
+const SYSTEM_PROMPT=`あなたは「わかやまガイドAI」。JR和歌山駅設置の観光案内AI。
+
+## バスのりば(西口1-4,東口5-6)
+1番:紀三井寺線(40/42/44),塩屋線(52/55),楠見線(86/87/88)
+2番:市内線(20/23/24/25/27),雑賀崎循環(30),雑賀崎(33),マリーナ(121/122)
+3番:本町線(0)
+4番:湊線(60/160/161/162/62),和大線(172/272/273),藤戸(372),坂田(75)
+5番(東口):鳴神線(90/94)
+6番(東口):関空リムジンバス
+
+## 主要路線
+和歌山城→2番(20/24/25/27)約10分「公園前」
+和歌浦→2番(20/23/24/25)約25-30分
+紀三井寺→1番(40/42/44)約20分
+マリーナ→1番(42)約30分
+雑賀崎→2番(30循環)約40分
+和大→4番(172/272)約40分
+風土記の丘→5番東口(90)約25分
+
+## 時刻検索URL(必ず案内)
+https://transfer-cloud.navitime.biz/wakayamabus/courses?busstop=00220204
+
+## 回答ルール
+- 200文字以内で完結させること。絶対に途中で切れない
+- 長い場合は要点だけ伝え「詳しくはお聞きください」と添える
+- 管理者登録情報を最優先で参照
+- 確信のない情報は「観光案内所でご確認ください」と添える
+- ユーザーの言語に合わせて回答（日本語/英語）`;
+
+// ═══ MODELS ═══
+const MODELS={lite:{id:"gemini-2.5-flash-lite",label:"Lite",limit:1000,color:"var(--green)"},flash:{id:"gemini-2.5-flash",label:"Flash",limit:250,color:"var(--amber)"},pro:{id:"gemini-2.5-pro",label:"Pro",limit:100,color:"var(--indigo)"}};
+
+// ═══ STATE ═══
+let apiKey=sessionStorage.getItem("gemini_key")||"";
+let messages=[],loading=false,isListening=false,voiceOn=true,isSpeaking=false,recognition=null;
+let usage={date:new Date().toDateString(),lite:0,flash:0,pro:0};
+const dead=new Set();
+let faqLv="home",faqCat=null,faqIdx=null;
+let infoDB=[],infoLoaded=false;
+
+// ═══ INIT ═══
+document.addEventListener("DOMContentLoaded",()=>{
+  renderNav();renderFaq();addWelcome();updKeyBtn();
+  document.getElementById("chatIn").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMsg()}});
+  document.getElementById("chatIn").addEventListener("input",updSend);
+  applyLang();
+});
+
+function applyLang(){
+  const t=T[lang];
+  document.getElementById("hdTitle").textContent=t.title;
+  document.getElementById("hdSub").textContent=t.sub;
+  document.getElementById("langBtn").textContent=t.langBtn;
+  document.getElementById("chatIn").placeholder=t.ph;
+  renderNav();renderFaq();
+}
+function toggleLang(){lang=lang==="ja"?"en":"ja";applyLang()}
+
+// ═══ NAV ═══
+function renderNav(){
+  const t=T[lang];
+  document.getElementById("mainNav").innerHTML=[
+    {id:"faq",l:t.faq},{id:"chat",l:t.chat},{id:"qr",l:t.qr}
+  ].map(n=>`<button class="nav-btn ${n.id==='faq'?'on':''}" data-v="${n.id}" onclick="showView('${n.id}')">${n.l}</button>`).join("");
+}
+function showView(v){
+  if(v==="chat"&&!apiKey){showModal();return}
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  ["faqView","chatView","qrView"].forEach(id=>{document.getElementById(id).classList.toggle("on",id===v+"View")});
+  if(v==="chat")scrollChat();
+  if(v==="qr")initQR();
+}
+
+// ═══ FAQ ═══
+function curFaq(){return lang==="ja"?FAQ_JA:FAQ_EN}
+function renderFaq(){
+  const el=document.getElementById("faqScroll"),t=T[lang],faq=curFaq();
+  if(faqLv==="home"){
+    el.innerHTML=`<div class="faq-home">${faq.map(c=>`<div class="cat-card" onclick="openCat('${c.id}')"><div class="cn">${c.name}</div><div class="cc">${c.items.length}${lang==="ja"?"件":" items"}</div></div>`).join("")}</div><div class="faq-cta" onclick="showView('chat')"><p>${t.ctaText}<br><b>${t.ctaBold}</b> ${t.ctaSuf}</p></div>`;
+  }else if(faqLv==="cat"){
+    const c=faq.find(x=>x.id===faqCat);
+    el.innerHTML=`<div class="faq-bread"><button onclick="goHome()">${lang==="ja"?"ホーム":"Home"}</button><span>›</span><span>${c.name}</span></div><div class="faq-items" style="animation:fadeSlide 0.3s">${c.items.map((it,i)=>`<button class="faq-q" onclick="openAns('${faqCat}',${i})">${it.q}</button>`).join("")}</div>`;
+  }else{
+    const c=faq.find(x=>x.id===faqCat),it=c.items[faqIdx];
+    el.innerHTML=`<div class="faq-bread"><button onclick="goHome()">${lang==="ja"?"ホーム":"Home"}</button><span>›</span><button onclick="openCat('${faqCat}')">${c.name}</button><span>›</span><span>${lang==="ja"?"回答":"Answer"}</span></div><div class="faq-ans"><h3>${it.q}</h3><div class="body">${lnk(it.a)}</div></div>`;
+  }
+  el.scrollTop=0;
+}
+function goHome(){faqLv="home";faqCat=null;faqIdx=null;renderFaq()}
+function openCat(id){faqLv="cat";faqCat=id;renderFaq()}
+function openAns(c,i){faqLv="answer";faqCat=c;faqIdx=i;renderFaq()}
+function lnk(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>").replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>')}
+
+// ═══ QR ═══
+function initQR(){
+  const SITE_URL="https://kentarokiyono.github.io/wakayamacity-guide/";
+  const t=T[lang];
+  document.getElementById("qrTitle").textContent=t.qrT;
+  document.getElementById("qrDesc").textContent=t.qrD;
+  document.getElementById("qrUrl").textContent=SITE_URL;
+  const el=document.getElementById("qrcode");
+  el.innerHTML="";
+  new QRCode(el,{text:SITE_URL,width:180,height:180,colorDark:"#1b3a5c",colorLight:"#ffffff"});
+}
+
+// ═══ CHAT ═══
+function addWelcome(){messages=[{role:"assistant",content:T[lang].welcome,model:null}];renderChat()}
+function renderChat(){
+  const el=document.getElementById("chatScroll");
+  el.innerHTML=messages.map((m,i)=>{
+    const last=i===messages.length-1,u=m.role==="user";
+    let bd="";if(!u&&m.model){const md=MODELS[m.model];bd=`<div class="mbadge" style="color:${md.color};background:${md.color}12;border:1px solid ${md.color}25"><span class="dot" style="background:${md.color}"></span>${md.label}</div>`}
+    return`<div class="msg ${u?"user":"assistant"} ${last?"msg-anim":""}"><div class="bubble">${lnk(m.content)}</div>${bd}</div>`;
+  }).join("");scrollChat();
+}
+function showTyp(tier){const md=tier?MODELS[tier]:null,c=md?md.color:"var(--indigo)";document.getElementById("chatScroll").innerHTML+=`<div class="typing" id="typI"><div class="typing-in"><div class="dots"><div class="d" style="background:${c}"></div><div class="d" style="background:${c}"></div><div class="d" style="background:${c}"></div></div>${md?`<span style="font-size:9px;font-family:var(--mono);opacity:0.5;color:${c}">${md.label}</span>`:""}</div></div>`;scrollChat()}
+function hideTyp(){const e=document.getElementById("typI");if(e)e.remove()}
+function showErr(m){document.getElementById("chatScroll").innerHTML+=`<div class="err-msg">${lnk(m)}</div>`;scrollChat()}
+function scrollChat(){const e=document.getElementById("chatScroll");requestAnimationFrame(()=>e.scrollTop=e.scrollHeight)}
+
+// ═══ USAGE ═══
+function rstDay(){const d=new Date().toDateString();if(usage.date!==d)usage={date:d,lite:0,flash:0,pro:0}}
+function canUse(t){rstDay();return usage[t]<MODELS[t].limit}
+function inc(t){rstDay();usage[t]++;updUI()}
+function updUI(){rstDay();const r={lite:MODELS.lite.limit-usage.lite,flash:MODELS.flash.limit-usage.flash,pro:MODELS.pro.limit-usage.pro};document.getElementById("uL").style.width=(r.lite/MODELS.lite.limit*100)+"%";document.getElementById("uF").style.width=(r.flash/MODELS.flash.limit*100)+"%";document.getElementById("uP").style.width=(r.pro/MODELS.pro.limit*100)+"%";document.getElementById("uC").textContent=(r.lite+r.flash+r.pro).toLocaleString()+(lang==="ja"?"回":"")}
+
+// ═══ INFO DB ═══
+async function loadInfo(){if(infoLoaded)return;try{const r=await fetch(GAS_URL+"?action=getInfo");const j=await r.json();infoDB=(j.data||[]).filter(e=>e.active==="○");infoLoaded=true}catch(e){}}
+setInterval(()=>{infoLoaded=false},300000);
+
+function buildSys(){
+  let p=SYSTEM_PROMPT;
+  if(infoDB.length){p+="\n\n## 管理者登録の最新情報（最優先で参照）\n";infoDB.forEach(e=>{p+="\n【"+e.category+"】"+e.title+"\n"+e.content+"\n"})}
+  return p;
+}
+
+// ═══ API ═══
+function classify(t){if(/^(こんにちは|ありがとう|はい|いいえ|hello|hi|thanks|bye|ok|うん)/i.test(t.trim())||t.trim().length<8)return"lite";return"flash"}
+function tierQ(t){const p=classify(t);return(p==="lite"?["lite","flash","pro"]:["flash","lite","pro"]).filter(x=>canUse(x)&&!dead.has(x))}
+
+async function callAI(tier,hist){
+  await loadInfo();
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/${MODELS[tier].id}:generateContent?key=${apiKey}`;
+  const body={system_instruction:{parts:[{text:buildSys()}]},contents:hist,generationConfig:{maxOutputTokens:4096,temperature:0.7},tools:[{google_search:{}}]};
+  const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  if(!res.ok){
+    const e=await res.json().catch(()=>({}));const msg=e?.error?.message||`Error ${res.status}`;
+    if(msg.includes("google_search")||msg.includes("tool")||msg.includes("INVALID")){delete body.tools;const r2=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r2.ok){const e2=await r2.json().catch(()=>({}));throw new Error(e2?.error?.message||`Error`)}const d2=await r2.json();return d2?.candidates?.[0]?.content?.parts?.map(p=>p.text).join("")||""}
+    const isQ=res.status===429||msg.toLowerCase().includes("quota")||msg.toLowerCase().includes("rate");
+    if(isQ){dead.add(tier);const err=new Error(msg);err.isQuota=true;throw err}
+    throw new Error(msg);
+  }
+  const d=await res.json();return d?.candidates?.[0]?.content?.parts?.map(p=>p.text).join("")||"";
+}
+
+// ═══ GENRE ═══
+const GENRES={bus:{kw:/バス|のりば|乗り場|系統|停留所|時刻|bus|stop/i,l:"バス路線"},spot:{kw:/城|寺|神社|島|崎|浦|観光|名所|castle|temple|shrine|island/i,l:"観光スポット"},gourmet:{kw:/ラーメン|グルメ|食べ|ランチ|名物|ramen|food|eat/i,l:"グルメ"},access:{kw:/アクセス|行き方|電車|駅|空港|access|train|station/i,l:"アクセス"},event:{kw:/祭|花火|桜|紅葉|イベント|festival|cherry|event/i,l:"季節"},plan:{kw:/コース|プラン|おすすめ|plan|recommend|course/i,l:"プラン"},info:{kw:/Wi-?Fi|案内所|ホテル|料金|info|wifi|hotel/i,l:"お役立ち"}};
+function genreKW(t){for(const[,g]of Object.entries(GENRES))if(g.kw.test(t))return g.l;return null}
+async function genreAI(t){if(!apiKey||!canUse("lite"))return"その他";try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODELS.lite.id}:generateContent?key=${apiKey}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:`質問を1ジャンルに分類。ジャンル名のみ返す。候補:バス路線,観光スポット,グルメ,アクセス,季節,プラン,お役立ち,その他\n\n${t}`}]}],generationConfig:{maxOutputTokens:20,temperature:0}})});if(!r.ok)return"その他";const d=await r.json();inc("lite");return d?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()||"その他"}catch{return"その他"}}
+async function getGenre(t){return genreKW(t)||await genreAI(t)}
+function detectLang(t){return/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(t)?"日本語":"英語"}
+
+// ═══ LOG ═══
+function sendLog(q,a,g,m,l){if(!GAS_URL)return;try{const p=new URLSearchParams({question:q.substring(0,500),answer:a.substring(0,500),genre:g,model:m,lang:l});new Image().src=GAS_URL+"?"+p;fetch(GAS_URL,{method:"POST",body:JSON.stringify({question:q,answer:a,genre:g,model:m,lang:l}),mode:"no-cors"}).catch(()=>{})}catch(e){}}
+
+// ═══ SEND ═══
+async function sendMsg(ov){
+  const inp=document.getElementById("chatIn"),text=(ov||inp.value).trim();
+  if(!text||loading)return;inp.value="";updSend();
+  const t=T[lang];
+  const q=tierQ(text);if(!q.length){showErr(t.exhaust);return}
+  messages.push({role:"user",content:text,model:null});renderChat();loading=true;
+  const hist=messages.filter((_,i)=>i>0).map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]}));
+  let ok=false;
+  for(const tier of q){hideTyp();showTyp(tier);try{const reply=await callAI(tier,hist);inc(tier);messages.push({role:"assistant",content:reply,model:tier});hideTyp();renderChat();speak(reply);
+    const genre=await getGenre(text);const ln=detectLang(text);sendLog(text,reply,genre,MODELS[tier].label,ln);
+    ok=true;break}catch(e){if(e.isQuota)continue;hideTyp();showErr(e.message?.includes("API key")?"APIキーが無効です。":"Error: "+e.message);ok=true;break}}
+  if(!ok){hideTyp();showErr(t.allDead)}
+  loading=false;updUI();
+}
+function updSend(){document.getElementById("sendBtn").classList.toggle("ready",!!document.getElementById("chatIn").value.trim())}
+
+// ═══ VOICE ═══
+function speak(t){if(!voiceOn)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[\u{1F300}-\u{1FAD6}\u{2600}-\u{27BF}]/gu,"").trim());u.lang=lang==="ja"?"ja-JP":"en-US";u.rate=1.05;u.onstart=()=>{isSpeaking=true;document.getElementById("spkStop").style.display="flex"};u.onend=u.onerror=()=>{isSpeaking=false;document.getElementById("spkStop").style.display="none"};speechSynthesis.speak(u)}
+function stopSpk(){speechSynthesis.cancel();isSpeaking=false;document.getElementById("spkStop").style.display="none"}
+function toggleV(){voiceOn=!voiceOn;const b=document.getElementById("vBtn");b.textContent=voiceOn?"🔊":"🔇";b.classList.toggle("on",voiceOn);if(!voiceOn&&isSpeaking)stopSpk()}
+function toggleMic(){if(isListening){recognition?.stop();return}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){showErr("音声認識非対応");return}recognition=new SR();recognition.lang=lang==="ja"?"ja-JP":"en-US";recognition.continuous=false;recognition.interimResults=false;recognition.onresult=e=>{const t=e.results[0][0].transcript;document.getElementById("chatIn").value=t;updSend();setLis(false);setTimeout(()=>sendMsg(t),200)};recognition.onerror=recognition.onend=()=>setLis(false);recognition.start();setLis(true)}
+function setLis(v){isListening=v;document.getElementById("micBtn").classList.toggle("on",v);document.getElementById("chatIn").placeholder=v?(lang==="ja"?"聴いています…":"Listening…"):T[lang].ph}
+
+// ═══ MODAL ═══
+function showModal(){document.getElementById("keyModal").classList.add("show")}
+function closeModal(){document.getElementById("keyModal").classList.remove("show")}
+function updSave(){document.getElementById("saveBtn").classList.toggle("ready",!!document.getElementById("keyIn").value.trim())}
+function saveKey(){const v=document.getElementById("keyIn").value.trim();if(!v)return;apiKey=v;try{sessionStorage.setItem("gemini_key",v)}catch{}closeModal();updKeyBtn();showView("chat")}
+function resetKey(){apiKey="";try{sessionStorage.removeItem("gemini_key")}catch{}updKeyBtn();showView("faq")}
+function updKeyBtn(){document.getElementById("keyBtn").style.display=apiKey?"block":"none"}
+</script>
+</body>
+</html>
